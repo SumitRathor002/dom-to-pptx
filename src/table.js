@@ -133,7 +133,11 @@ export function extractTableData(node, scale) {
   }
 
   node.querySelectorAll('tr').forEach((tr) => {
-    rowHeights.push(tr.getBoundingClientRect().height * (1 / 96) * scale);
+    const trCells = Array.from(tr.children).filter((c) => c.tagName === 'TD' || c.tagName === 'TH');
+    const trHeightPx = trCells.length
+      ? Math.max(...trCells.map((c) => c.getBoundingClientRect().height))
+      : tr.getBoundingClientRect().height;
+    rowHeights.push(trHeightPx * (1 / 96) * scale);
 
     const rowData = [];
     Array.from(tr.children)
